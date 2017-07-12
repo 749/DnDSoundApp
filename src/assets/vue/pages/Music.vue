@@ -1,7 +1,7 @@
 <template>
 	<md-theme md-name="music">
 		<md-toolbar>
-			<md-button class="md-icon-button" @click="$refs.navigation.toggle()">
+			<md-button class="md-icon-button" @click="menu">
 		    	<md-icon>menu</md-icon>
 			</md-button>
 		        
@@ -22,7 +22,9 @@ export default {
 		}
 	},
 	methods: {
-		
+		menu() {
+			window.bus.$emit('sb-menu')
+		}
 		
 	}
 }

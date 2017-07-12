@@ -36,17 +36,14 @@ export default {
 			switch(message.charAt(0)) {
 			case 'p':
 				var num = (message.charCodeAt(1)-'a'.charCodeAt(0));
-				window.data["button"+num] = 'background-color: green';
 				window.bus.$emit("sb-button-press", num);
 				return true;
 			case 'r':
 				var num = (message.charCodeAt(1)-'a'.charCodeAt(0));
-				window.data["button"+num] = '';
 				window.bus.$emit("sb-button-release", num);
 				return true;
 			case 'f':
 				var fader = parseInt(message.substr(1, message.length-2));
-				window.data.fader = fader;
 				window.bus.$emit('sb-fader',fader);
 				return true;
 			}
