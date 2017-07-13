@@ -23,26 +23,37 @@
 			</md-button>
 		</md-toolbar>
 				
-		<main class="main-content">
-			<div class="player">
+		<main class="sb-music-content">
+			<div class="sb-music-player">
 				<p>Currently playing in <strong>{{active.category}}</strong>:</p>
 				<h3 v-html="active.song"></h3>
 			</div>
 			<sb-scrubber :pos="active.pos"></sb-scrubber>
 			<div class="sb-music-controls">
-				<md-button class="md-icon-button md-raised md-primary">
+				<md-button class="md-icon-button">
 					<md-icon>skip_previous</md-icon>
 				</md-button>
-				<md-button class="md-icon-button md-raised md-primary">
+				<md-button class="md-icon-button" v-if="active.playing">
+					<md-icon>pause</md-icon>
+				</md-button>
+				<md-button class="md-icon-button" v-if="!active.playing">
 					<md-icon>play_arrow</md-icon>
 				</md-button>
-				<md-button class="md-icon-button md-raised md-primary">
+				<md-button class="md-icon-button">
 					<md-icon>skip_next</md-icon>
 				</md-button>
 
-				<md-button class="md-fab md-fab-bottom-right md-accent" @click=>
+				<md-button class="md-fab md-fab-bottom-right md-accent" @click="$refs.categories.toggle()">
 					<md-icon>apps</md-icon>
 				</md-button>
+			</div>
+			<div class="sb-music-playlist">
+				<h3>Playlist</h3>
+				<md-list class="md-dense">
+					<md-list-item v-for="i in playlist" :key="i.name">
+						<span v-html="i.name"></span>
+					</md-list-item>
+				</md-list>
 			</div>
 		</main>
 		
@@ -62,10 +73,17 @@ export default {
 			},{
 				name: 'Explore'
 			}],
+			playlist: [{
+				name: 'Merchant Prince &mdash; Two Steps from Hell'
+			},{
+				name: 'Lion King &mdash; Soundtrack'
+			},{
+				name: 'Backstreet Back &mdash; Backstreet Boys'
+			}],
 			active: {
 				category: 'Battle',
 				song: 'Star Sky &mdash; Two Steps From Hell',
-				playing: false,
+				playing: true,
 				pos: 56
 			}
 		}
