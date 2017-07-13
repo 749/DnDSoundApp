@@ -15,12 +15,12 @@
 				</md-theme>
 				<md-theme md-name="dice">
 					<md-button class="md-raised md-primary" @click="$router.push('/dice/');$refs.navigation.toggle()">
-				    	<md-icon>dice</md-icon> &nbsp; Dice Roll
+				    	<md-icon>casino</md-icon> &nbsp; Dice Roll
 					</md-button>
 				</md-theme>
 				<md-theme md-name="crit">
 					<md-button class="md-raised md-primary" @click="$router.push('/crit/');$refs.navigation.toggle()">
-				    	<md-icon>note</md-icon> &nbsp; Crit Roll
+				    	<md-icon>star_border</md-icon> &nbsp; Crit Roll
 					</md-button>
 				</md-theme>
 			</div>
