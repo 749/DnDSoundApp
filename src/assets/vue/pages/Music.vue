@@ -28,18 +28,18 @@
 				<p>Currently playing in <strong>{{active.category}}</strong>:</p>
 				<h3 v-html="active.song"></h3>
 			</div>
-			<sb-scrubber :pos="active.pos"></sb-scrubber>
+			<sb-scrubber :pos="active.pos" @scrub="setPlayTime"></sb-scrubber>
 			<div class="sb-music-controls">
-				<md-button class="md-icon-button">
+				<md-button class="md-icon-button" @click="goPrevious">
 					<md-icon>skip_previous</md-icon>
 				</md-button>
-				<md-button class="md-icon-button" v-if="active.playing">
+				<md-button class="md-icon-button" v-if="active.playing" @click="togglePlay">
 					<md-icon>pause</md-icon>
 				</md-button>
-				<md-button class="md-icon-button" v-if="!active.playing">
+				<md-button class="md-icon-button" v-if="!active.playing" @click="togglePlay">
 					<md-icon>play_arrow</md-icon>
 				</md-button>
-				<md-button class="md-icon-button">
+				<md-button class="md-icon-button" @click="goNext">
 					<md-icon>skip_next</md-icon>
 				</md-button>
 
@@ -91,8 +91,20 @@ export default {
 	methods: {
 		menu() {
 			window.bus.$emit('sb-menu')
+		},
+		togglePlay() {
+			window.bus.$emit('sb-music-play')
+		},
+		setPlayTime(percent) {
+			console.log(percent);
+			this.active.pos = percent;
+		},
+		goPrevious() {
+			window.bus.$emit('sb-music-prev')
+		},
+		goNext() {
+			window.bus.$emit('sb-music-next')
 		}
-		
 	},
 	components: {
 		sbScrubber
