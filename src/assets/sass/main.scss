@@ -1,4 +1,4 @@
-html {
+html, body {
 	overflow: hidden;
 }
 
@@ -60,4 +60,8 @@ html {
 	.md-icon {
 		color: white;
 	}
+}
+
+.sb-music-control {
+	display: none;
 }

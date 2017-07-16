@@ -2,14 +2,15 @@
 	<md-theme md-name="music">
 		<md-sidenav class="md-right" :md-swipeable="false" ref="categories">
 			<md-toolbar>
-				<h2 class="md-title">Kategorien</h2>
+				<h2 class="md-title">Categories</h2>
 			</md-toolbar>
 			<md-list>
-				<md-list-item v-for="i in categories" :key="i.name">
-					<span>{{i.name}}</span>
+				<md-list-item v-for="i in categories" :key="i">
+					<span>{{i}}</span>
 				</md-list-item>
 			</md-list>
 		</md-sidenav>
+		<sb-music-add ref="addFile"></sb-music-add>
 		
 		<md-toolbar>
 			<md-button class="md-icon-button" @click="menu">
@@ -21,12 +22,21 @@
   			<md-button class="md-icon-button" @click="$refs.categories.toggle()">
 				<md-icon>search</md-icon>
 			</md-button>
+			<md-menu md-direction="bottom left">
+				<md-button class="md-icon-button" md-menu-trigger>
+					<md-icon>more_vert</md-icon>
+				</md-button>
+
+				<md-menu-content>
+					<md-menu-item @click="$refs.addFile.open()">Add File</md-menu-item>
+				</md-menu-content>
+			</md-menu>
 		</md-toolbar>
 				
 		<main class="sb-music-content">
 			<div class="sb-music-player">
 				<p>Currently playing in <strong>{{active.category}}</strong>:</p>
-				<h3 v-html="active.song"></h3>
+				<h3 v-html="song"></h3>
 			</div>
 			<sb-scrubber :pos="active.pos" @scrub="setPlayTime"></sb-scrubber>
 			<div class="sb-music-controls">
@@ -49,9 +59,10 @@
 			</div>
 			<div class="sb-music-playlist">
 				<h3>Playlist</h3>
-				<md-list class="md-dense">
-					<md-list-item v-for="i in playlist" :key="i.name">
-						<span v-html="i.name"></span>
+				<md-list>
+					<md-list-item v-for="(i, key) in playlist" :key="i.file" @click="play(key)">
+						<md-icon v-if="key == active.song" class="md-accent">play_arrow</md-icon>
+						<span v-html="i.title + ' &mdash; ' + i.author"></span>
 					</md-list-item>
 				</md-list>
 			</div>
@@ -62,30 +73,32 @@
 
 <script>
 import sbScrubber from '../components/sbScrubber/sbScrubber.vue';
+import sbMusicAdd from '../components/sbMusicDialogAdd.vue';
 
 export default {
 	created(){
+		window.music = this
 	},
 	data() {
-		return {
-			categories: [{
-				name: 'Battle'
-			},{
-				name: 'Explore'
-			}],
-			playlist: [{
-				name: 'Merchant Prince &mdash; Two Steps from Hell'
-			},{
-				name: 'Lion King &mdash; Soundtrack'
-			},{
-				name: 'Backstreet Back &mdash; Backstreet Boys'
-			}],
-			active: {
-				category: 'Battle',
-				song: 'Star Sky &mdash; Two Steps From Hell',
-				playing: true,
-				pos: 56
+		return {}
+	},
+	computed: {
+		categories() {
+			var cats = [];
+			for(var i in window.bus.config.music) {
+				cats.push(i)
 			}
+			return cats;
+		},
+		active() {
+			return window.bus.active
+		},
+		playlist() {
+			return window.bus.config.music[this.active.category]
+		},
+		song() {
+			var song = this.playlist[this.active.song];
+			return song.title + ' &mdash; ' + song.author
 		}
 	},
 	methods: {
@@ -99,6 +112,9 @@ export default {
 			console.log(percent);
 			this.active.pos = percent;
 		},
+		play(key) {
+			window.bus.$emit('sb-music-play', key)
+		},
 		goPrevious() {
 			window.bus.$emit('sb-music-prev')
 		},
@@ -107,7 +123,7 @@ export default {
 		}
 	},
 	components: {
-		sbScrubber
+		sbScrubber, sbMusicAdd
 	}
 }
 </script>

@@ -42,6 +42,7 @@
         "com.improvisio.bluetoothserial": "~3.0.2",
         "cordova-android": "^5.1.1",
         "cordova-browser": "^4.1.0",
+        "cordova-ourcodeworld-filebrowser": "git+https://github.com/ourcodeworld/cordova-ourcodeworld-filebrowser.git",
         "cordova-plugin-background-mode": "^0.7.2",
         "cordova-plugin-compat": "^1.0.0",
         "cordova-plugin-device": "^1.1.6",

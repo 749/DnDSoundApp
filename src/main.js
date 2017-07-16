@@ -38,7 +38,93 @@ Vue.material.registerTheme({
   }
 })
 
-window.bus = new Vue();
+window.bus = new Vue({
+	created() {
+		this.$on('sb-config-change', this.onConfigChange.bind(this))
+	},
+	data: {
+		saveTimeout: null,
+		active: {
+			category: 'Battle',
+			song: 0,
+			playing: true,
+			pos: 56
+		},
+		config: {
+			music:{
+			},
+			sounds: {
+			},
+			freesound: {
+				clientId: '',
+				clientSecret: ''
+			}
+		}
+	},
+	methods: {
+		onConfigChange() {
+			if(this.saveTimeout)
+				clearTimeout(this.saveTimeout)
+				
+			setTimeout(() => {
+				this.saveTimeout = null;
+				console.log("saving config file")
+				
+				this.saveConfig()
+			}, 500);
+		},
+		loadConfig() {
+			requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fs) => {
+				fs.root.getFile("config.json", { create: false, exclusive: false }, (fileEntry) => {
+					fileEntry.file((file) => {
+				        var reader = new FileReader();
+
+				        reader.onloadend = () => {
+				            console.log("Successful file read: ", reader.result);
+				            this.config = JSON.parse(reader.result);
+				        };
+
+				        reader.readAsText(file);
+
+				    }, (err) => {console.log('could not open file', err)});
+				},(err) => {console.log('could not open file', err)})
+			})
+		},
+		saveConfig() {
+			var dataObj = new Blob([JSON.stringify(this.config)], { type:'text/plain' })
+
+			requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+
+			    console.log('file system open: ' + fs.name);
+			    fs.root.getFile("config.json", { create: true, exclusive: false }, function (fileEntry) {
+			    	
+			    	console.log(fileEntry)
+			    	
+			    	fileEntry.createWriter(function (fileWriter) {
+
+			            fileWriter.onwriteend = function() {
+			                console.log("Successful file write...");
+			            };
+
+			            fileWriter.onerror = function (e) {
+			                console.log("Failed file write: " + e.toString());
+			            };
+			            
+			            
+
+			            fileWriter.write(dataObj);
+			        });
+
+			    }, function (e) {
+	                console.log("Failed file write: ", e);
+	            });
+
+			}, function (e) {
+                console.log("Failed file write: ", e);
+            });
+		}
+	}
+});
 
 // Init App
 new Vue({
@@ -53,4 +139,5 @@ new Vue({
 
 document.addEventListener("deviceready", function() {
 	navigator.splashscreen.hide();
+	bus.loadConfig();
 }, false);

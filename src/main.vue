@@ -27,6 +27,7 @@
 		</md-sidenav>
 		<router-view></router-view>
 		<bluetooth></bluetooth>
+		<sb-music-control></sb-music-control>
 		<audio src="./static/sounds/door_squeek.wav" ref="sound0"></audio>
 		<audio src="./static/sounds/stone_stone.wav" ref="sound1"></audio>
 		<audio src="./static/sounds/bushes_rustling.wav" ref="sound2"></audio>
@@ -38,6 +39,7 @@
 
 <script>
 	import Bluetooth from './assets/vue/Bluetooth.vue'
+	import sbMusicControl from './assets/vue/components/sbMusicControl/sbMusicControl.vue'
 	export default {
 		created() {
 			window.data = this;
@@ -51,7 +53,7 @@
 			};
 		},
 		components: {
-			Bluetooth
+			Bluetooth, sbMusicControl
 		}
 	}
 </script>
