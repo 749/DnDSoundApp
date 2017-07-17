@@ -91,10 +91,10 @@ export default {
 			return cats;
 		},
 		active() {
-			return window.bus.active
+			return window.bus.active || {}
 		},
 		playlist() {
-			return window.bus.config.music[this.active.category]
+			return window.bus.config.music[this.active.category] || []
 		},
 		song() {
 			var song = this.playlist[this.active.song];
@@ -106,7 +106,7 @@ export default {
 			window.bus.$emit('sb-menu')
 		},
 		togglePlay() {
-			window.bus.$emit('sb-music-play')
+			window.bus.$emit('sb-music-pause')
 		},
 		setPlayTime(percent) {
 			console.log(percent);
